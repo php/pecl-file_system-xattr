@@ -22,7 +22,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </lead>
  <date>2020-04-22</date>
  <version>
-  <release>1.3.1</release>
+  <release>1.4.0dev</release>
   <api>1.2.0</api>
  </version>
  <stability>
@@ -31,7 +31,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-- preliminary support for PHP 8
+-
  </notes>
  <contents>
   <dir name="/">
@@ -63,6 +63,21 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <configureoption default="autodetect" name="with-xattr" prompt="libattr library installation dir?" />
  </extsrcrelease>
  <changelog>
+  <release>
+   <date>2020-04-22</date>
+   <version>
+    <release>1.3.1</release>
+    <api>1.2.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+- preliminary support for PHP 8
+   </notes>
+  </release>
   <release>
    <date>2016-03-07</date>
    <time>16:00:00</time>
