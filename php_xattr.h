@@ -42,24 +42,6 @@ PHP_FUNCTION(xattr_remove);
 PHP_FUNCTION(xattr_list);
 PHP_FUNCTION(xattr_supported);
 
-#if PHP_MAJOR_VERSION < 7
-typedef long zend_long;
-typedef int strsize_t;
-#define _RETVAL_STRINGL(s,l,d) RETVAL_STRINGL(s,l,d)
-#define _RETURN_STRINGL(s,l,d) RETURN_STRINGL(s,l,d)
-#else
-typedef size_t strsize_t;
-#define _RETVAL_STRINGL(s,l,d) { RETVAL_STRINGL(s,l); if (!d) efree(s); }
-#define _RETURN_STRINGL(s,l,d) { _RETVAL_STRINGL(s,l,d); return; }
-#endif
-
-#ifndef TSRMLS_C
-#define TSRMLS_C
-#define TSRMLS_CC
-#define TSRMLS_D  void
-#define TSRMLS_DC
-#endif
-
 #endif	/* PHP_XATTR_H */
 
 

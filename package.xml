@@ -31,7 +31,8 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
--
+- drop dupport for PHP older than 7.2
+- add type hinting in reflection
  </notes>
  <contents>
   <dir name="/">
@@ -46,15 +47,17 @@ http://pear.php.net/dtd/package-2.0.xsd">
    <file name="LICENSE" role="doc" />
    <file name="php_xattr.h" role="src" />
    <file name="xattr.c" role="src" />
+   <file name="xattr_arginfo.h" role="src" />
+   <file name="xattr.stub.php" role="src" />
   </dir> <!-- / -->
  </contents>
  <dependencies>
   <required>
    <php>
-    <min>5.3.0</min>
+    <min>7.2.0</min>
    </php>
    <pearinstaller>
-    <min>1.4.0b1</min>
+    <min>1.10</min>
    </pearinstaller>
   </required>
  </dependencies>

@@ -49,39 +49,25 @@
 #include <sys/types.h>
 #include <sys/xattr.h>
 
-ZEND_BEGIN_ARG_INFO_EX(xattr_set_arginfo, 0, 0, 3)
-  ZEND_ARG_INFO(0, path)
-  ZEND_ARG_INFO(0, name)
-  ZEND_ARG_INFO(0, value)
-  ZEND_ARG_INFO(0, flags)
-ZEND_END_ARG_INFO()
+#if PHP_VERSION_ID < 80000
+#define ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(pass_by_ref, name, type_hint, allow_null, default_value) \
+        ZEND_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null)
+#endif
 
-ZEND_BEGIN_ARG_INFO_EX(xattr_get_arginfo, 0, 0, 2)
-  ZEND_ARG_INFO(0, path)
-  ZEND_ARG_INFO(0, name)
-  ZEND_ARG_INFO(0, flags)
-ZEND_END_ARG_INFO()
-
-ZEND_BEGIN_ARG_INFO_EX(xattr_list_arginfo, 0, 0, 1)
-  ZEND_ARG_INFO(0, path)
-  ZEND_ARG_INFO(0, flags)
-ZEND_END_ARG_INFO()
+/* file generated with PHP 8+ used on PHP 7 thanks to above compatibility layer */
+#include "xattr_arginfo.h"
 
 /* {{{ xattr_functions[]
  *
  * Every user visible function must have an entry in xattr_functions[].
  */
 zend_function_entry xattr_functions[] = {
-	PHP_FE(xattr_set,       xattr_set_arginfo)
-	PHP_FE(xattr_get,       xattr_get_arginfo)
-	PHP_FE(xattr_remove,    xattr_get_arginfo)
-	PHP_FE(xattr_list,      xattr_list_arginfo)
-	PHP_FE(xattr_supported,	xattr_list_arginfo)
-#ifdef PHP_FE_END
+	PHP_FE(xattr_set,       arginfo_xattr_set)
+	PHP_FE(xattr_get,       arginfo_xattr_get)
+	PHP_FE(xattr_remove,    arginfo_xattr_remove)
+	PHP_FE(xattr_list,      arginfo_xattr_list)
+	PHP_FE(xattr_supported,	arginfo_xattr_supported)
 	PHP_FE_END
-#else
-	{ NULL, NULL, NULL }
-#endif
 };
 /* }}} */
 
@@ -136,9 +122,9 @@ PHP_MINFO_FUNCTION(xattr)
 }
 /* }}} */
 
-#define check_prefix(flags) add_prefix(NULL, flags TSRMLS_CC)
+#define check_prefix(flags) add_prefix(NULL, flags)
 
-static char *add_prefix(char *name, zend_long flags TSRMLS_DC) {
+static char *add_prefix(char *name, zend_long flags) {
 	char *ret;
 
 	if ((flags & XATTR_MASK) > 0 &&
@@ -147,13 +133,13 @@ static char *add_prefix(char *name, zend_long flags TSRMLS_DC) {
 	    (flags & XATTR_MASK) != XATTR_SECURITY &&
 	    (flags & XATTR_MASK) != XATTR_USER &&
 	    (flags & XATTR_MASK) != XATTR_ALL) {
-		php_error(E_NOTICE, "%s Bad option, single namespace expected", get_active_function_name(TSRMLS_C));
+		php_error(E_NOTICE, "%s Bad option, single namespace expected", get_active_function_name());
 	}
 	if (!name) {
 		return NULL;
 	}
 	if ((flags & XATTR_MASK) == XATTR_ALL && !strchr(name, '.')) {
-		php_error(E_NOTICE, "%s Bad option, missing namespace, XATTR_ALL ignored", get_active_function_name(TSRMLS_C));
+		php_error(E_NOTICE, "%s Bad option, missing namespace, XATTR_ALL ignored", get_active_function_name());
 	}
 
 	if (flags & XATTR_TRUSTED) {
@@ -184,22 +170,18 @@ PHP_FUNCTION(xattr_set)
 	char *path = NULL;
 	int error;
 	zend_long flags = 0;
-	strsize_t tmp, value_len;
+	size_t tmp, value_len;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss|l", &path, &tmp, &attr_name, &tmp, &attr_value, &value_len, &flags) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "sss|l", &path, &tmp, &attr_name, &tmp, &attr_value, &value_len, &flags) == FAILURE) {
 		return;
 	}
 
 	/* Enforce open_basedir and safe_mode */
-	if (php_check_open_basedir(path TSRMLS_CC)
-#if PHP_VERSION_ID < 50400
-	|| (PG(safe_mode) && !php_checkuid(path, NULL, CHECKUID_DISALLOW_FILE_NOT_EXISTS))
-#endif
-	) {
+	if (php_check_open_basedir(path)) {
 		RETURN_FALSE;
 	}
 
-	prefixed_name = add_prefix(attr_name, flags TSRMLS_CC);
+	prefixed_name = add_prefix(attr_name, flags);
 	/* Attempt to set an attribute, warn if failed. */
 	if (flags & XATTR_DONTFOLLOW) {
 		error = lsetxattr(path, prefixed_name, attr_value, (int)value_len, (int)(flags & (XATTR_CREATE | XATTR_REPLACE)));
@@ -209,24 +191,24 @@ PHP_FUNCTION(xattr_set)
 	if (error == -1) {
 		switch (errno) {
 			case E2BIG:
-				php_error(E_WARNING, "%s The value of the given attribute is too large", get_active_function_name(TSRMLS_C));
+				php_error(E_WARNING, "%s The value of the given attribute is too large", get_active_function_name());
 				break;
 			case EPERM:
 			case EACCES:
-				php_error(E_WARNING, "%s Permission denied", get_active_function_name(TSRMLS_C));
+				php_error(E_WARNING, "%s Permission denied", get_active_function_name());
 				break;
 			case EOPNOTSUPP:
-				php_error(E_WARNING, "%s Operation not supported", get_active_function_name(TSRMLS_C));
+				php_error(E_WARNING, "%s Operation not supported", get_active_function_name());
 				break;
 			case ENOENT:
 			case ENOTDIR:
-				php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(TSRMLS_C), path);
+				php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(), path);
 				break;
 			case EEXIST:
-				php_error(E_WARNING, "%s Attribute %s already exists", get_active_function_name(TSRMLS_C), prefixed_name);
+				php_error(E_WARNING, "%s Attribute %s already exists", get_active_function_name(), prefixed_name);
 				break;
 			case ENODATA:
-				php_error(E_WARNING, "%s Attribute %s doesn't exists", get_active_function_name(TSRMLS_C), prefixed_name);
+				php_error(E_WARNING, "%s Attribute %s doesn't exists", get_active_function_name(), prefixed_name);
 				break;
 		}
 
@@ -247,24 +229,20 @@ PHP_FUNCTION(xattr_get)
 	char *attr_name = NULL, *prefixed_name;
 	char *attr_value = NULL;
 	char *path = NULL;
-	strsize_t tmp;
+	size_t tmp;
 	zend_long flags = 0;
 	size_t buffer_size;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|l", &path, &tmp, &attr_name, &tmp, &flags) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss|l", &path, &tmp, &attr_name, &tmp, &flags) == FAILURE) {
 		return;
 	}
 
 	/* Enforce open_basedir and safe_mode */
-	if (php_check_open_basedir(path TSRMLS_CC)
-#if PHP_VERSION_ID < 50400
-	|| (PG(safe_mode) && !php_checkuid(path, NULL, CHECKUID_DISALLOW_FILE_NOT_EXISTS))
-#endif
-	) {
+	if (php_check_open_basedir(path)) {
 		RETURN_FALSE;
 	}
 
-	prefixed_name = add_prefix(attr_name, flags TSRMLS_CC);
+	prefixed_name = add_prefix(attr_name, flags);
 
 	/*
 	 * If buffer is too small then attr_get sets errno to E2BIG and tells us
@@ -292,7 +270,7 @@ PHP_FUNCTION(xattr_get)
 
 	/* Return a string if everything is ok */
 	if (buffer_size != (size_t)-1) {
-		_RETVAL_STRINGL(attr_value, buffer_size, 1); /* copy + free instead of realloc */
+		RETVAL_STRINGL(attr_value, buffer_size); /* copy + free instead of realloc */
 		efree(attr_value);
 		return;
 	}
@@ -303,14 +281,14 @@ PHP_FUNCTION(xattr_get)
 			break;
 		case ENOENT:
 		case ENOTDIR:
-			php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(TSRMLS_C), path);
+			php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(), path);
 			break;
 		case EPERM:
 		case EACCES:
-			php_error(E_WARNING, "%s Permission denied", get_active_function_name(TSRMLS_C));
+			php_error(E_WARNING, "%s Permission denied", get_active_function_name());
 			break;
 		case EOPNOTSUPP:
-			php_error(E_WARNING, "%s Operation not supported", get_active_function_name(TSRMLS_C));
+			php_error(E_WARNING, "%s Operation not supported", get_active_function_name());
 			break;
 	}
 
@@ -324,19 +302,15 @@ PHP_FUNCTION(xattr_supported)
 {
 	char *buffer="", *path = NULL;
 	int error;
-	strsize_t tmp;
+	size_t tmp;
 	zend_long flags = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &path, &tmp, &flags) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|l", &path, &tmp, &flags) == FAILURE) {
 		return;
 	}
 
 	/* Enforce open_basedir and safe_mode */
-	if (php_check_open_basedir(path TSRMLS_CC)
-#if PHP_VERSION_ID < 50400
-	|| (PG(safe_mode) && !php_checkuid(path, NULL, CHECKUID_DISALLOW_FILE_NOT_EXISTS))
-#endif
-	) {
+	if (php_check_open_basedir(path)) {
 		RETURN_NULL();
 	}
 
@@ -358,10 +332,10 @@ PHP_FUNCTION(xattr_supported)
 			RETURN_FALSE;
 		case ENOENT:
 		case ENOTDIR:
-			php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(TSRMLS_C), path);
+			php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(), path);
 			break;
 		case EACCES:
-			php_error(E_WARNING, "%s Permission denied", get_active_function_name(TSRMLS_C));
+			php_error(E_WARNING, "%s Permission denied", get_active_function_name());
 			break;
 	}
 
@@ -369,30 +343,26 @@ PHP_FUNCTION(xattr_supported)
 }
 /* }}} */
 
-/* {{{ proto string xattr_remove(string path, string name [, int flags])
+/* {{{ proto bool xattr_remove(string path, string name [, int flags])
    Remove an extended attribute of file */
 PHP_FUNCTION(xattr_remove)
 {
 	char *attr_name = NULL, *prefixed_name;
 	char *path = NULL;
 	int error;
-	strsize_t tmp;
+	size_t tmp;
 	zend_long flags = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ss|l", &path, &tmp, &attr_name, &tmp, &flags) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ss|l", &path, &tmp, &attr_name, &tmp, &flags) == FAILURE) {
 		return;
 	}
 
 	/* Enforce open_basedir and safe_mode */
-	if (php_check_open_basedir(path TSRMLS_CC)
-#if PHP_VERSION_ID < 50400
-	|| (PG(safe_mode) && !php_checkuid(path, NULL, CHECKUID_DISALLOW_FILE_NOT_EXISTS))
-#endif
-	) {
+	if (php_check_open_basedir(path)) {
 		RETURN_FALSE;
 	}
 
-	prefixed_name = add_prefix(attr_name, flags TSRMLS_CC);
+	prefixed_name = add_prefix(attr_name, flags);
 
 	/* Attempt to remove an attribute, warn if failed. */
 	if (flags & XATTR_DONTFOLLOW) {
@@ -407,18 +377,18 @@ PHP_FUNCTION(xattr_remove)
 	if (error == -1) {
 		switch (errno) {
 			case E2BIG:
-				php_error(E_WARNING, "%s The value of the given attribute is too large", get_active_function_name(TSRMLS_C));
+				php_error(E_WARNING, "%s The value of the given attribute is too large", get_active_function_name());
 				break;
 			case EPERM:
 			case EACCES:
-				php_error(E_WARNING, "%s Permission denied", get_active_function_name(TSRMLS_C));
+				php_error(E_WARNING, "%s Permission denied", get_active_function_name());
 				break;
 			case EOPNOTSUPP:
-				php_error(E_WARNING, "%s Operation not supported", get_active_function_name(TSRMLS_C));
+				php_error(E_WARNING, "%s Operation not supported", get_active_function_name());
 				break;
 			case ENOENT:
 			case ENOTDIR:
-				php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(TSRMLS_C), path);
+				php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(), path);
 				break;
 		}
 
@@ -436,23 +406,19 @@ PHP_FUNCTION(xattr_list)
 	char *buffer, *path = NULL;
 	char *p, *prefix;
 	int error;
-	strsize_t tmp;
+	size_t tmp;
 	zend_long flags = 0;
 	size_t i = 0, buffer_size = XATTR_BUFFER_SIZE;
 	size_t len, prefix_len;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|l", &path, &tmp, &flags) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s|l", &path, &tmp, &flags) == FAILURE) {
 		return;
 	}
 
 	check_prefix(flags);
 
 	/* Enforce open_basedir and safe_mode */
-	if (php_check_open_basedir(path TSRMLS_CC)
-#if PHP_VERSION_ID < 50400
-	|| (PG(safe_mode) && !php_checkuid(path, NULL, CHECKUID_DISALLOW_FILE_NOT_EXISTS))
-#endif
-	) {
+	if (php_check_open_basedir(path)) {
 		RETURN_FALSE;
 	}
 
@@ -474,14 +440,14 @@ PHP_FUNCTION(xattr_list)
 		if (error == -1) {
 			switch (errno) {
 				case ENOTSUP:
-					php_error(E_WARNING, "%s Operation not supported", get_active_function_name(TSRMLS_C));
+					php_error(E_WARNING, "%s Operation not supported", get_active_function_name());
 					break;
 				case ENOENT:
 				case ENOTDIR:
-					php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(TSRMLS_C), path);
+					php_error(E_WARNING, "%s File %s doesn't exists", get_active_function_name(), path);
 					break;
 				case EACCES:
-					php_error(E_WARNING, "%s Permission denied", get_active_function_name(TSRMLS_C));
+					php_error(E_WARNING, "%s Permission denied", get_active_function_name());
 					break;
 			}
 
@@ -540,17 +506,9 @@ PHP_FUNCTION(xattr_list)
 	while (i != buffer_size) {
 		len = strlen(p) + 1;	/* +1 for NULL */
 		if (flags & XATTR_ALL) {
-#if PHP_MAJOR_VERSION < 7
-			add_next_index_stringl(return_value, p, len - 1, 1);
-#else
 			add_next_index_stringl(return_value, p, len - 1);
-#endif
 		} else if (strstr(p, prefix) == p) {
-#if PHP_MAJOR_VERSION < 7
-			add_next_index_stringl(return_value, p + prefix_len, len - 1 - prefix_len, 1);
-#else
 			add_next_index_stringl(return_value, p + prefix_len, len - 1 - prefix_len);
-#endif
 		}
 
 		p += len;
