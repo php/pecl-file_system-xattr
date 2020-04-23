@@ -23,7 +23,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  <date>2020-04-22</date>
  <version>
   <release>1.4.0dev</release>
-  <api>1.4.0</api>
+  <api>1.2.0</api>
  </version>
  <stability>
   <release>stable</release>
@@ -33,7 +33,6 @@ http://pear.php.net/dtd/package-2.0.xsd">
  <notes>
 - drop dupport for PHP older than 7.2
 - add type hinting in reflection
-- return NULL instead of FALSE in error cases
  </notes>
  <contents>
   <dir name="/">

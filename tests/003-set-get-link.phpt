@@ -49,24 +49,24 @@ string(3) "xxx"
 -- List
 array(3) {
   [0]=>
-  string(16) "security.selinux"
-  [1]=>
   string(17) "trusted.php.test1"
-  [2]=>
+  [1]=>
   string(17) "trusted.php.test2"
+  [2]=>
+  string(16) "security.selinux"
 }
 array(3) {
   [0]=>
-  string(16) "security.selinux"
-  [1]=>
   string(17) "trusted.php.test1"
-  [2]=>
+  [1]=>
   string(17) "trusted.php.test2"
+  [2]=>
+  string(16) "security.selinux"
 }
 array(2) {
   [0]=>
-  string(16) "security.selinux"
-  [1]=>
   string(17) "trusted.php.test3"
+  [1]=>
+  string(16) "security.selinux"
 }
 Done

@@ -178,7 +178,7 @@ PHP_FUNCTION(xattr_set)
 
 	/* Enforce open_basedir and safe_mode */
 	if (php_check_open_basedir(path)) {
-		RETURN_NULL();
+		RETURN_FALSE;
 	}
 
 	prefixed_name = add_prefix(attr_name, flags);
@@ -239,7 +239,7 @@ PHP_FUNCTION(xattr_get)
 
 	/* Enforce open_basedir and safe_mode */
 	if (php_check_open_basedir(path)) {
-		RETURN_NULL();
+		RETURN_FALSE;
 	}
 
 	prefixed_name = add_prefix(attr_name, flags);
@@ -292,7 +292,7 @@ PHP_FUNCTION(xattr_get)
 			break;
 	}
 
-	RETURN_NULL();
+	RETURN_FALSE;
 }
 /* }}} */
 
@@ -359,7 +359,7 @@ PHP_FUNCTION(xattr_remove)
 
 	/* Enforce open_basedir and safe_mode */
 	if (php_check_open_basedir(path)) {
-		RETURN_NULL();
+		RETURN_FALSE;
 	}
 
 	prefixed_name = add_prefix(attr_name, flags);
@@ -419,7 +419,7 @@ PHP_FUNCTION(xattr_list)
 
 	/* Enforce open_basedir and safe_mode */
 	if (php_check_open_basedir(path)) {
-		RETURN_NULL();
+		RETURN_FALSE;
 	}
 
 	buffer = emalloc(buffer_size);
@@ -452,7 +452,7 @@ PHP_FUNCTION(xattr_list)
 			}
 
 			efree(buffer);
-			RETURN_NULL();
+			RETURN_FALSE;
 		}
 
 		/* Resize buffer to the required size */
@@ -475,7 +475,7 @@ PHP_FUNCTION(xattr_list)
 	/* If there is still an error and it's not ERANGE then return false */
 	if (error == -1) {
 		efree(buffer);
-		RETURN_NULL();
+		RETURN_FALSE;
 	}
 
 	buffer_size = error;
