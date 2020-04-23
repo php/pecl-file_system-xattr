@@ -31,7 +31,7 @@ Done
 
 Warning: xattr_set Attribute user.php.test doesn't exists in %s004-create-replace.php on line 7
 bool(false)
-bool(false)
+NULL
 bool(true)
 string(1) "2"
 

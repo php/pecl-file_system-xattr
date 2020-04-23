@@ -52,5 +52,5 @@ array(1) {
 bool(true)
 -- Remove
 bool(true)
-bool(false)
+NULL
 Done
