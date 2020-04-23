@@ -22,6 +22,9 @@ var_dump(xattr_get($fic, "user.$attr", XATTR_ALL));
 var_dump(xattr_set($fic, $attr, 'bar'));
 var_dump(xattr_get($fic, $attr));
 
+var_dump(xattr_set($fic, $attr, 42));
+var_dump(xattr_get($fic, $attr));
+
 echo "-- List\n";
 var_dump(xattr_list($fic));
 var_dump(in_array("user.$attr", xattr_list($fic, XATTR_ALL)));
@@ -44,6 +47,8 @@ string(3) "foo"
 string(3) "foo"
 bool(true)
 string(3) "bar"
+bool(true)
+string(2) "42"
 -- List
 array(1) {
   [0]=>
