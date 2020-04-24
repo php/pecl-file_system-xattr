@@ -22,7 +22,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </lead>
  <date>2020-04-24</date>
  <version>
-  <release>1.4.0</release>
+  <release>1.4.1dev</release>
   <api>1.2.0</api>
  </version>
  <stability>
@@ -31,8 +31,7 @@ http://pear.php.net/dtd/package-2.0.xsd">
  </stability>
  <license uri="http://www.php.net/license">PHP License</license>
  <notes>
-- drop dupport for PHP older than 7.2
-- add type hinting in reflection
+-
  </notes>
  <contents>
   <dir name="/">
@@ -66,6 +65,22 @@ http://pear.php.net/dtd/package-2.0.xsd">
   <configureoption default="autodetect" name="with-xattr" prompt="libattr library installation dir?" />
  </extsrcrelease>
  <changelog>
+  <release>
+   <date>2020-04-24</date>
+   <version>
+    <release>1.4.0</release>
+    <api>1.2.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <license uri="http://www.php.net/license">PHP License</license>
+   <notes>
+- drop dupport for PHP older than 7.2
+- add type hinting in reflection
+   </notes>
+  </release>
   <release>
    <date>2020-04-22</date>
    <version>
