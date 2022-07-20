@@ -1,5 +1,5 @@
 /* This is a generated file, edit the .stub.php file instead.
- * Stub hash: a7f022885d01d53913bae459d614cc2ae44a3a07 */
+ * Stub hash: db4d314e2ba7f19a7f82b6d903a94336137fe46a */
 
 ZEND_BEGIN_ARG_WITH_RETURN_TYPE_INFO_EX(arginfo_xattr_set, 0, 3, _IS_BOOL, 0)
 	ZEND_ARG_TYPE_INFO(0, path, IS_STRING, 0)
@@ -48,3 +48,53 @@ ZEND_BEGIN_ARG_WITH_RETURN_TYPE_MASK_EX(arginfo_xattr_list, 0, 1, MAY_BE_ARRAY|M
 	ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(0, flags, IS_LONG, 0, "0")
 ZEND_END_ARG_INFO()
 #endif
+
+
+ZEND_FUNCTION(xattr_set);
+#if PHP_MAJOR_VERSION < 8
+ZEND_FUNCTION(xattr_get);
+#endif
+#if !(PHP_MAJOR_VERSION < 8)
+ZEND_FUNCTION(xattr_get);
+#endif
+ZEND_FUNCTION(xattr_supported);
+ZEND_FUNCTION(xattr_remove);
+#if PHP_MAJOR_VERSION < 8
+ZEND_FUNCTION(xattr_list);
+#endif
+#if !(PHP_MAJOR_VERSION < 8)
+ZEND_FUNCTION(xattr_list);
+#endif
+
+
+static const zend_function_entry ext_functions[] = {
+	ZEND_FE(xattr_set, arginfo_xattr_set)
+#if PHP_MAJOR_VERSION < 8
+	ZEND_FE(xattr_get, arginfo_xattr_get)
+#endif
+#if !(PHP_MAJOR_VERSION < 8)
+	ZEND_FE(xattr_get, arginfo_xattr_get)
+#endif
+	ZEND_FE(xattr_supported, arginfo_xattr_supported)
+	ZEND_FE(xattr_remove, arginfo_xattr_remove)
+#if PHP_MAJOR_VERSION < 8
+	ZEND_FE(xattr_list, arginfo_xattr_list)
+#endif
+#if !(PHP_MAJOR_VERSION < 8)
+	ZEND_FE(xattr_list, arginfo_xattr_list)
+#endif
+	ZEND_FE_END
+};
+
+static void register_xattr_symbols(int module_number)
+{
+	REGISTER_LONG_CONSTANT("XATTR_CREATE", XATTR_CREATE, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("XATTR_REPLACE", XATTR_REPLACE, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("XATTR_DONTFOLLOW", XATTR_DONTFOLLOW, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("XATTR_USER", XATTR_USER, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("XATTR_ROOT", XATTR_ROOT, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("XATTR_TRUSTED", XATTR_TRUSTED, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("XATTR_SYSTEM", XATTR_SYSTEM, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("XATTR_SECURITY", XATTR_SECURITY, CONST_CS | CONST_PERSISTENT);
+	REGISTER_LONG_CONSTANT("XATTR_ALL", XATTR_ALL, CONST_CS | CONST_PERSISTENT);
+}

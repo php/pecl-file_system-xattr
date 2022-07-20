@@ -57,26 +57,12 @@
 /* file generated with PHP 8+ used on PHP 7 thanks to above compatibility layer */
 #include "xattr_arginfo.h"
 
-/* {{{ xattr_functions[]
- *
- * Every user visible function must have an entry in xattr_functions[].
- */
-zend_function_entry xattr_functions[] = {
-	PHP_FE(xattr_set,       arginfo_xattr_set)
-	PHP_FE(xattr_get,       arginfo_xattr_get)
-	PHP_FE(xattr_remove,    arginfo_xattr_remove)
-	PHP_FE(xattr_list,      arginfo_xattr_list)
-	PHP_FE(xattr_supported,	arginfo_xattr_supported)
-	PHP_FE_END
-};
-/* }}} */
-
 /* {{{ xattr_module_entry
  */
 zend_module_entry xattr_module_entry = {
 	STANDARD_MODULE_HEADER,
 	"xattr",
-	xattr_functions,
+	ext_functions,
 	PHP_MINIT(xattr),
 	NULL,
 	NULL,
@@ -95,17 +81,7 @@ ZEND_GET_MODULE(xattr)
  */
 PHP_MINIT_FUNCTION(xattr)
 {
-	REGISTER_LONG_CONSTANT("XATTR_CREATE",     XATTR_CREATE,     CONST_CS | CONST_PERSISTENT);
-	REGISTER_LONG_CONSTANT("XATTR_REPLACE",    XATTR_REPLACE,    CONST_CS | CONST_PERSISTENT);
-
-	REGISTER_LONG_CONSTANT("XATTR_DONTFOLLOW", XATTR_DONTFOLLOW, CONST_CS | CONST_PERSISTENT);
-
-	REGISTER_LONG_CONSTANT("XATTR_USER",       XATTR_USER,       CONST_CS | CONST_PERSISTENT);
-	REGISTER_LONG_CONSTANT("XATTR_ROOT",       XATTR_ROOT,       CONST_CS | CONST_PERSISTENT);
-	REGISTER_LONG_CONSTANT("XATTR_TRUSTED",    XATTR_TRUSTED,    CONST_CS | CONST_PERSISTENT);
-	REGISTER_LONG_CONSTANT("XATTR_SYSTEM",     XATTR_SYSTEM,     CONST_CS | CONST_PERSISTENT);
-	REGISTER_LONG_CONSTANT("XATTR_SECURITY",   XATTR_SECURITY,   CONST_CS | CONST_PERSISTENT);
-	REGISTER_LONG_CONSTANT("XATTR_ALL",        XATTR_ALL,        CONST_CS | CONST_PERSISTENT);
+	register_xattr_symbols(module_number);
 
 	return SUCCESS;
 }
