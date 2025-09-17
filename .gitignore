@@ -1,7 +1,9 @@
 .deps
+*.dep
 *.lo
 *.la
 .libs
+sendpackagist
 Makefile
 Makefile.fragments
 Makefile.global
@@ -19,6 +21,7 @@ config.nice
 config.status
 config.sub
 configure
+configure~
 configure.in
 configure.ac
 install-sh
