@@ -1,0 +1,13 @@
+{
+    "name": "pecl/xattr",
+    "type": "php-ext",
+    "license": "PHP-3.01",
+    "description": "Extended attributes",
+    "require": {
+        "php": ">= 7.2.0"
+    },
+    "php-ext": {
+        "extension-name": "pecl/xattr",
+        "configure-options": []
+    }
+}
