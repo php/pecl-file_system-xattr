@@ -26,7 +26,7 @@ var_dump(xattr_get($fic, $attr));
 ?>
 Done
 --CLEAN--
-<?php unlink('foo.txt'); ?>
+<?php @unlink('foo.txt'); ?>
 --EXPECTF--
 
 Warning: xattr_set Attribute user.php.test doesn't exists in %s004-create-replace.php on line 7

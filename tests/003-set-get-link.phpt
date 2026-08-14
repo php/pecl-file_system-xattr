@@ -34,8 +34,8 @@ var_dump(xattr_list($link, XATTR_ALL|XATTR_DONTFOLLOW));
 Done
 --CLEAN--
 <?php
-unlink('foo.txt');
-unlink('foo.lnk');
+@unlink('foo.txt');
+@unlink('foo.lnk');
 ?>
 --EXPECT--
 -- Set
