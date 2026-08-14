@@ -36,7 +36,7 @@ var_dump(xattr_get($fic, $attr));
 ?>
 Done
 --CLEAN--
-<?php unlink('foo.txt'); ?>
+<?php @unlink('foo.txt'); ?>
 --EXPECT--
 -- Supported
 bool(true)
